@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách người dùng</title>
+  <style>
+    table {
+      border: 1px solid #000;
+    }
+
+    th, td {
+      border: 1px dotted #555;
+    }
+  </style>
+</head>
+<body>
+<span th:if="${keyword}">
+  Kết quả cho <code>"[[${keyword}]]"</code>, <a th:href="@{/customers}">Xoá kết quả tìm kiếm</a>.<br>
+</span>
+Có [[${customers.totalElements}]] người dùng.
+<form>
+  <label>
+   Tìm kiếm theo tên hoặc email:
+    <input type="text" name="s">
+  </label>
+  <input type="submit" value="Tìm">
+</form>
+<table>
+  <caption>Danh sách người dùng</caption>
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Họ và tên</th>
+    <th>Email</th>
+    <th>Địa chỉ</th>
+    <th>Tỉnh thành</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="c : ${customers}">
+    <td th:text="${c.id}"></td>
+    <td>
+      <a th:href="@{/customers/{id}(id=${c.id})}" th:text="${c.name}"></a>
+    </td>
+    <td th:text="${c.email}"></td>
+    <td th:text="${c.address}"></td>
+    <td th:text="${c.province?.name}"></td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <a th:if="${customers.hasPrevious()}"
+     th:href="@{'/customers'(page=${customers.number - 1}, size=${customers.size}, s=${keyword})}">
+    Trang trước
+  </a>
+  [[${customers.number + 1}]]/[[${customers.totalPages}]]
+  <a th:if="${customers.hasNext()}"
+     th:href="@{'/customers'(page=${customers.number + 1}, size=${customers.size}, s=${keyword})}">
+    Trang sau
+  </a>
+</div>
+</body>
+</html>
